@@ -32,84 +32,12 @@ EOT
     relative_url          = optional(string)
     request_body          = optional(string)
     request_method        = optional(string)
-    schema_column = optional(object({
+    schema_column = optional(list(object({
       description = optional(string)
       name        = string
       type        = optional(string)
-    }))
+    })))
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        length(v.linked_service_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.relative_url == null || (length(v.relative_url) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.request_body == null || (length(v.request_body) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.request_method == null || (length(v.request_method) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.description == null || (length(v.description) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.folder == null || (length(v.folder) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.schema_column == null || (length(v.schema_column.name) > 0)
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.schema_column == null || (v.schema_column.type == null || (contains(["Byte", "Byte[]", "Boolean", "Date", "DateTime", "DateTimeOffset", "Decimal", "Double", "Guid", "Int16", "Int32", "Int64", "Single", "String", "TimeSpan"], v.schema_column.type)))
-      )
-    ])
-    error_message = "must be one of: Byte, Byte[], Boolean, Date, DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.data_factory_dataset_https : (
-        v.schema_column == null || (v.schema_column.description == null || (length(v.schema_column.description) > 0))
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_data_factory_dataset_http's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -120,5 +48,32 @@ EOT
   #   source:    [from factories.ValidateFactoryID] !ok
   # path: data_factory_id
   #   source:    [from factories.ValidateFactoryID] err != nil
+  # path: linked_service_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: relative_url
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: request_body
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: request_method
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: description
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: folder
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: schema_column.name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: schema_column.type
+  #   condition: contains(["Byte", "Byte[]", "Boolean", "Date", "DateTime", "DateTimeOffset", "Decimal", "Double", "Guid", "Int16", "Int32", "Int64", "Single", "String", "TimeSpan"], value)
+  #   message:   must be one of: Byte, Byte[], Boolean, Date, DateTime, DateTimeOffset, Decimal, Double, Guid, Int16, Int32, Int64, Single, String, TimeSpan
+  # path: schema_column.description
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
