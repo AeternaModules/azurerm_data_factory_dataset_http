@@ -1,3 +1,7 @@
+output "data_factory_dataset_https_id" {
+  description = "Map of id values across all data_factory_dataset_https, keyed the same as var.data_factory_dataset_https"
+  value       = { for k, v in azurerm_data_factory_dataset_http.data_factory_dataset_https : k => v.id }
+}
 output "data_factory_dataset_https_additional_properties" {
   description = "Map of additional_properties values across all data_factory_dataset_https, keyed the same as var.data_factory_dataset_https"
   value       = { for k, v in azurerm_data_factory_dataset_http.data_factory_dataset_https : k => v.additional_properties }
